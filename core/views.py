@@ -7,8 +7,8 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, View
 from django.shortcuts import redirect
 from django.utils import timezone
-from .forms import CheckoutForm, CouponForm, RefundForm, PaymentForm
-from .models import Item, OrderItem, Order, Address, Payment, Coupon, Refund, UserProfile
+from .forms import CheckoutForm, CouponForm, RefundForm, PaymentForm, OrderCreateForm
+from .models import Item, OrderItem, Order, Address, Payment, PaymentC, Coupon, Refund, UserProfile, Category
 
 import random
 import string
@@ -34,6 +34,15 @@ def is_valid_form(values):
             valid = False
     return valid
 
+class CategoryView(View):
+    def get(self, *args, **kwargs):
+        category = Category.objects.get(slug=self.kwargs['slug'])
+        item = Item.objects.filter(category=category)
+        context = {
+            'object_list': item,
+            'category_name': category
+        }
+        return render(self.request, "categories/category.html", context)
 
 class CheckoutView(View):
     def get(self, *args, **kwargs):
@@ -194,8 +203,8 @@ class CheckoutView(View):
 
                 if payment_option == 'S':
                     return redirect('core:payment', payment_option='stripe')
-                elif payment_option == 'P':
-                    return redirect('core:payment', payment_option='paypal')
+                elif payment_option == 'C':
+                    return redirect('core:paymentc', payment_option='cash on delivery')
                 else:
                     messages.warning(
                         self.request, "Invalid payment option selected")
@@ -345,7 +354,7 @@ class PaymentView(View):
 
 class HomeView(ListView):
     model = Item
-    paginate_by = 10
+    paginate_by = 12
     template_name = "home.html"
 
 
@@ -515,3 +524,60 @@ class RequestRefundView(View):
             except ObjectDoesNotExist:
                 messages.info(self.request, "This order does not exist.")
                 return redirect("core:request-refund")
+
+class PaymentViewC(View):
+     def get(self, *args, **kwargs):
+         order = Order.objects.get(user=self.request.user, ordered=False)
+         if order.billing_address:
+             context = {
+                 'order': order,
+                 'DISPLAY_COUPON_FORM': False
+             }
+             userprofile = self.request.user.userprofile
+             return render(self.request, "cod.html", context)
+         else:
+             messages.warning(
+                 self.request, "You have not added a billing address")
+             return redirect("core:checkout")
+
+     def order_create(request):
+         cart = Cart(request)
+         if request.method == 'POST':
+             form = OrderCreateForm(request.POST)
+             if form.is_valid():
+                 order = form.save()
+                 for item in object_list:
+                     OrderItem.objects.create(
+                     order=order,
+                     product=item['product'],
+                     price=item['price'],
+                     quantity=item['quantity']
+                      )
+                     order.clear()
+             return render(request, 'created.html', {'order': order})
+         else:
+             form = OrderCreateForm()
+         return render(request, 'create.html', {'form': form})
+
+     def post(self, *args, **kwargs):
+         order = Order.objects.get(user=self.request.user, ordered=False)
+         form = OrderCreateForm(self.request.POST)
+         userprofile = UserProfile.objects.get(user=self.request.user)
+         if form.is_valid():
+             save = form.cleaned_data.get('save')
+             use_default = form.cleaned_data.get('use_default')
+
+             # assign the payment to the order
+             order_items = order.items.all()
+             order_items.update(ordered=True)
+             for item in order_items:
+                 item.save()
+
+             order.ordered = True
+             order.ref_code = create_ref_code()
+             order.save()
+
+             messages.success(self.request, "Your order was successful!")
+             return redirect("/")
+         messages.success(self.request, "Your order was successful!")
+         return redirect("/")

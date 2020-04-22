@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import (
     ItemDetailView,
+    CategoryView,
     CheckoutView,
     HomeView,
     OrderSummaryView,
@@ -8,9 +9,19 @@ from .views import (
     remove_from_cart,
     remove_single_item_from_cart,
     PaymentView,
+    PaymentViewC,
     AddCouponView,
     RequestRefundView
 )
+from django.conf.urls import url
+
+#from django.views.generic import ListView
+#from categories.models import Category
+#from categories import views
+
+#categorytree_dict = {
+#    'queryset': Category.objects.filter(level=0)
+#}
 
 app_name = 'core'
 
@@ -25,5 +36,7 @@ urlpatterns = [
     path('remove-item-from-cart/<slug>/', remove_single_item_from_cart,
          name='remove-single-item-from-cart'),
     path('payment/<payment_option>/', PaymentView.as_view(), name='payment'),
-    path('request-refund/', RequestRefundView.as_view(), name='request-refund')
+    path('paymentc/<payment_option>/', PaymentViewC.as_view(), name='paymentc'),
+    path('request-refund/', RequestRefundView.as_view(), name='request-refund'),
+    path('category/<slug>/', CategoryView.as_view(), name='category')
 ]

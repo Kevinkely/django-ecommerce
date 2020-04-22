@@ -5,7 +5,7 @@ from django_countries.widgets import CountrySelectWidget
 
 PAYMENT_CHOICES = (
     ('S', 'Stripe'),
-    ('P', 'PayPal')
+    ('C', 'Cash on Delivery')
 )
 
 
@@ -59,3 +59,7 @@ class PaymentForm(forms.Form):
     stripeToken = forms.CharField(required=False)
     save = forms.BooleanField(required=False)
     use_default = forms.BooleanField(required=False)
+
+class OrderCreateForm(forms.Form):
+         fields = ['user', 'ref_code', 'items', 'ordered_date',  'ordered', 'shipping_address',
+          'coupon', 'being_delivered', 'received']

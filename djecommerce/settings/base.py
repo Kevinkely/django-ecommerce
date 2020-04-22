@@ -21,6 +21,9 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_countries',
 
+     #'categories',
+   #'categories.editor',
+
     'core'
 ]
 

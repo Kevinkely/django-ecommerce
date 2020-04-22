@@ -36,6 +36,17 @@ DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': show_toolbar
 }
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#        'NAME': 'kommerce',
+#        'USER': 'portal',
+#        'PASSWORD': 'my7465',
+#        'HOST': 'localhost',
+#        'PORT': ''
+#    }
+#}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
