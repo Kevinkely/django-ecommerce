@@ -5,7 +5,9 @@ from django_countries.widgets import CountrySelectWidget
 
 PAYMENT_CHOICES = (
     ('S', 'Stripe'),
-    ('C', 'Cash on Delivery')
+    ('C', 'Cash on Delivery'),
+    ('M', 'Lipa Na Mpesa')
+
 )
 
 

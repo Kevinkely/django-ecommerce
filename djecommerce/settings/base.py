@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_countries',
 
+      'haystack',
      #'categories',
    #'categories.editor',
 
@@ -83,3 +84,12 @@ LOGIN_REDIRECT_URL = '/'
 # CRISPY FORMS
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+#haystack configuration
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack_elasticsearch.elasticsearch5.Elasticsearch5SearchEngine',
+        'URL': 'http://127.0.0.1:9200/',
+        'INDEX_NAME': 'haystack',
+    },
+}

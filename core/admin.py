@@ -2,6 +2,8 @@ from django.contrib import admin
 
 from .models import Item, OrderItem, Order, Payment, PaymentC, Coupon, Refund, Address, UserProfile, Category
 
+from .models import MpesaPayment
+
 
 def make_refund_accepted(modeladmin, request, queryset):
     queryset.update(refund_requested=False, refund_granted=True)
@@ -74,3 +76,5 @@ admin.site.register(Address, AddressAdmin)
 admin.site.register(UserProfile)
 admin.site.register(PaymentC)
 admin.site.register(Category, CategoryAdmin)
+
+admin.site.register(MpesaPayment)

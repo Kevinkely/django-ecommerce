@@ -13,15 +13,8 @@ from .views import (
     AddCouponView,
     RequestRefundView
 )
-from django.conf.urls import url
+from . import views
 
-#from django.views.generic import ListView
-#from categories.models import Category
-#from categories import views
-
-#categorytree_dict = {
-#    'queryset': Category.objects.filter(level=0)
-#}
 
 app_name = 'core'
 
@@ -38,5 +31,13 @@ urlpatterns = [
     path('payment/<payment_option>/', PaymentView.as_view(), name='payment'),
     path('paymentc/<payment_option>/', PaymentViewC.as_view(), name='paymentc'),
     path('request-refund/', RequestRefundView.as_view(), name='request-refund'),
-    path('category/<slug>/', CategoryView.as_view(), name='category')
+    path('category/<slug>/', CategoryView.as_view(), name='category'),
+    path('mpesa/accesstoken', views.getAccessToken, name='get_mpesa_access_token'),
+    path('mpesaonline/<payment_option>/', views.lipa_na_mpesa_online, name='lipa_na_mpesa'), #lipa_na_mpesa_online
+
+    # These urls are for registering, confirmation, validation and callback
+    path('c2b/register', views.register_urls, name="register_mpesa_validation"),
+    path('c2b/confirmation', views.confirmation, name="confirmation"),
+    path('c2b/validation', views.validation, name="validation"),
+    path('c2b/callback', views.call_back, name="call_back"),
 ]
