@@ -1,6 +1,7 @@
 from django import forms
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
+from phonenumber_field.formfields import PhoneNumberField
 
 
 PAYMENT_CHOICES = (
@@ -56,7 +57,6 @@ class RefundForm(forms.Form):
     }))
     email = forms.EmailField()
 
-
 class PaymentForm(forms.Form):
     stripeToken = forms.CharField(required=False)
     save = forms.BooleanField(required=False)
@@ -65,3 +65,8 @@ class PaymentForm(forms.Form):
 class OrderCreateForm(forms.Form):
          fields = ['user', 'ref_code', 'items', 'ordered_date',  'ordered', 'shipping_address',
           'coupon', 'being_delivered', 'received']
+
+
+class InputPhonenumber(forms.Form):
+    phonenumber = PhoneNumberField(widget=forms.TextInput(attrs={'placeholder': ('phone')}),
+                       label= ("Phone number"), required=True)

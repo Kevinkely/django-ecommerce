@@ -28,7 +28,7 @@ def _deactivate(args):
 _deactivate(["nondestructive"])
 aliases["deactivate"] = _deactivate
 
-$VIRTUAL_ENV = r"/home/portal/a2020/django-ecommerce/myvenv"
+$VIRTUAL_ENV = r"/home/portal/@20/django-ecommerce/myvenv"
 
 $_OLD_VIRTUAL_PATH = $PATH
 $PATH = $PATH[:]
